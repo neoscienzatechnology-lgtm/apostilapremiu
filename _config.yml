@@ -1,0 +1,21 @@
+# GitHub Pages Configuration
+
+# Tema (opcional)
+theme: jekyll-theme-minimal
+
+# Incluir arquivos que começam com underscore
+include:
+  - _headers
+  - .nojekyll
+
+# Excluir arquivos desnecessários
+exclude:
+  - node_modules/
+  - package.json
+  - package-lock.json
+  - tailwind.config.js
+  - css/input.css
+  - README.md
+  - INSTALL.md
+  - CHECKLIST.md
+  - sugestoes-melhorias.md

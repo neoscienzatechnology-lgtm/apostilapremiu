@@ -1,0 +1,50 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom CSS Variables */
+:root {
+  --pbg: #09090b;
+  --sbg: #18181b;
+  --sbord: #27272a;
+}
+
+html.light {
+  --pbg: #f1f5f9;
+  --sbg: #1e293b;
+  --sbord: #334155;
+}
+
+/* Custom Components */
+@layer components {
+  .page-sheet {
+    @apply bg-white text-zinc-900 rounded-2xl shadow-xl p-8 mb-6;
+  }
+
+  .box-tip {
+    @apply border-l-4 border-blue-500 bg-blue-50 p-4 rounded-lg my-4;
+  }
+
+  .box-warn {
+    @apply border-l-4 border-amber-500 bg-amber-50 p-4 rounded-lg my-4;
+  }
+
+  .box-danger {
+    @apply border-l-4 border-red-500 bg-red-50 p-4 rounded-lg my-4;
+  }
+
+  .box-success {
+    @apply border-l-4 border-green-500 bg-green-50 p-4 rounded-lg my-4;
+  }
+
+  .skip-link {
+    @apply absolute -top-10 left-0 bg-black text-white px-4 py-2 z-50 focus:top-0 transition-all;
+  }
+}
+
+/* Custom Utilities */
+@layer utilities {
+  .scroll-smooth {
+    scroll-behavior: smooth;
+  }
+}

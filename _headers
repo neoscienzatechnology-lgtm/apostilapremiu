@@ -1,0 +1,35 @@
+# Headers para otimização de cache e segurança no GitHub Pages
+
+# CSS e JS - Cache longo (1 ano)
+/css/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/js/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# HTML - Cache curto (1 hora)
+/*.html
+  Cache-Control: public, max-age=3600
+
+# Service Worker - Sem cache
+/sw.js
+  Cache-Control: no-cache, no-store, must-revalidate
+
+# Manifest
+/manifest.json
+  Cache-Control: public, max-age=86400
+
+# Imagens - Cache médio (1 semana)
+/assets/*
+  Cache-Control: public, max-age=604800
+
+# Fontes - Cache longo
+*.woff2
+  Cache-Control: public, max-age=31536000, immutable
+
+# Security Headers
+/*
+  X-Frame-Options: SAMEORIGIN
+  X-Content-Type-Options: nosniff
+  X-XSS-Protection: 1; mode=block
+  Referrer-Policy: strict-origin-when-cross-origin

@@ -1,0 +1,36 @@
+{
+  "name": "apostila-javascript-premium",
+  "version": "1.0.0",
+  "description": "Apostila completa de JavaScript do básico ao avançado",
+  "main": "index.html",
+  "scripts": {
+    "dev": "tailwindcss -i ./css/input.css -o ./css/output.css --watch",
+    "build": "tailwindcss -i ./css/input.css -o ./css/output.css --minify",
+    "serve": "python -m http.server 8000",
+    "start": "npm run dev & npm run serve",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d .",
+    "deploy:manual": "npm run build && git add . && git commit -m 'Deploy' && git push"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/neoscienzatechnology-lgtm/apostilapremiu.git"
+  },
+  "keywords": [
+    "javascript",
+    "html",
+    "css",
+    "tutorial",
+    "apostila",
+    "web-development",
+    "pwa",
+    "github-pages"
+  ],
+  "author": "William Mesquita",
+  "license": "MIT",
+  "homepage": "https://neoscienzatechnology-lgtm.github.io/apostilapremiu/",
+  "devDependencies": {
+    "tailwindcss": "^3.4.0",
+    "gh-pages": "^6.1.0"
+  }
+}

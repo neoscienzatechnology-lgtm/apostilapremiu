@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Offline - Apostila JavaScript</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .container {
+      background: white;
+      border-radius: 20px;
+      padding: 40px;
+      max-width: 500px;
+      text-align: center;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    }
+    .icon {
+      font-size: 80px;
+      margin-bottom: 20px;
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+    }
+    h1 {
+      color: #1a202c;
+      font-size: 28px;
+      margin-bottom: 15px;
+      font-weight: 800;
+    }
+    p {
+      color: #4a5568;
+      font-size: 16px;
+      line-height: 1.6;
+      margin-bottom: 25px;
+    }
+    .btn {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      padding: 12px 30px;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+    .btn:hover {
+      transform: translateY(-2px);
+    }
+    .status {
+      margin-top: 20px;
+      padding: 10px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+    }
+    .status.offline {
+      background: #fed7d7;
+      color: #c53030;
+    }
+    .status.online {
+      background: #c6f6d5;
+      color: #2f855a;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="icon">📡</div>
+    <h1>Você está offline</h1>
+    <p>
+      Não se preocupe! A apostila está salva no seu dispositivo. 
+      Você pode continuar lendo o conteúdo já carregado.
+    </p>
+    <button class="btn" onclick="window.location.reload()">
+      🔄 Tentar Novamente
+    </button>
+    <div id="status" class="status offline">
+      ⚠️ Sem conexão com a internet
+    </div>
+  </div>
+
+  <script>
+    // Monitora status da conexão
+    function updateStatus() {
+      const status = document.getElementById('status');
+      if (navigator.onLine) {
+        status.className = 'status online';
+        status.textContent = '✓ Conexão restaurada! Recarregando...';
+        setTimeout(() => window.location.reload(), 1500);
+      } else {
+        status.className = 'status offline';
+        status.textContent = '⚠️ Sem conexão com a internet';
+      }
+    }
+
+    window.addEventListener('online', updateStatus);
+    window.addEventListener('offline', updateStatus);
+    
+    // Verifica a cada 5 segundos
+    setInterval(updateStatus, 5000);
+  </script>
+</body>
+</html>
