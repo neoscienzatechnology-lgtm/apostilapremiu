@@ -1,14 +1,13 @@
 const CACHE_NAME = 'apostila-js-v1.0.0';
-const OFFLINE_URL = '/offline.html';
+const OFFLINE_URL = 'offline.html';
 
 const STATIC_ASSETS = [
-  '/',
-  '/apostila-javascript-premium.html',
-  '/css/output.css',
-  '/js/sanitize.js',
-  '/js/playground.js',
-  '/js/app.js',
-  '/manifest.json',
+  'apostila-javascript-premium.html',
+  'css/output.css',
+  'js/sanitize.js',
+  'js/playground.js',
+  'js/app.js',
+  'manifest.json',
   OFFLINE_URL
 ];
 
@@ -48,6 +47,22 @@ self.addEventListener('activate', (event) => {
         })
       );
     }).then(() => self.clients.claim())
+  );
+});
+
+// Avisar clientes quando uma nova versão for ativada
+self.addEventListener('activate', (event) => {
+  event.waitUntil(
+    (async () => {
+      try {
+        const clients = await self.clients.matchAll({ includeUncontrolled: true });
+        for (const client of clients) {
+          client.postMessage({ type: 'NEW_VERSION_AVAILABLE' });
+        }
+      } catch (e) {
+        console.error('[SW] Falha ao notificar clientes sobre atualização', e);
+      }
+    })()
   );
 });
 

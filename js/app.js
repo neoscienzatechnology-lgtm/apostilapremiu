@@ -22,7 +22,10 @@ class ApostilaApp {
     // Registrar Service Worker (PWA)
     if ('serviceWorker' in navigator) {
       try {
-        const registration = await navigator.serviceWorker.register('/sw.js');
+        const swPath = (window.APP_CONFIG && window.APP_CONFIG.getAssetPath)
+          ? window.APP_CONFIG.getAssetPath('/sw.js')
+          : './sw.js';
+        const registration = await navigator.serviceWorker.register(swPath);
         console.log('✓ Service Worker registrado:', registration.scope);
         
         // Verificar atualizações
@@ -37,6 +40,25 @@ class ApostilaApp {
       } catch (err) {
         console.warn('Service Worker falhou:', err);
       }
+    }
+
+    notificarAtualizacao() {
+      // Cria um toast com botão para atualizar a página
+      const toast = document.createElement('div');
+      toast.style.cssText = 'position:fixed;bottom:20px;right:20px;padding:12px 16px;background:#111;color:#fff;border-radius:10px;z-index:10000;display:flex;gap:10px;align-items:center;box-shadow:0 6px 20px rgba(0,0,0,0.3)';
+      toast.innerHTML = '<div>🔄 Nova versão disponível</div>';
+      const btn = document.createElement('button');
+      btn.textContent = 'Atualizar';
+      btn.style.cssText = 'background:#10b981;color:#fff;border:none;padding:8px 10px;border-radius:8px;cursor:pointer;font-weight:700';
+      btn.addEventListener('click', () => {
+        if (navigator.serviceWorker.controller) {
+          navigator.serviceWorker.controller.postMessage({ type: 'SKIP_WAITING' });
+        }
+        setTimeout(() => location.reload(true), 500);
+      });
+      toast.appendChild(btn);
+      document.body.appendChild(toast);
+      setTimeout(() => toast.remove(), 15000);
     }
 
     // Inicializar módulos

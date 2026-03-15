@@ -152,7 +152,7 @@ export class NotesSystem {
         </div>
         
         <div style="display: flex; gap: 10px; margin-top: 20px;">
-          <button id="nota-salvar" style="
+              <button id="nota-salvar" style="
             flex: 1;
             background: linear-gradient(135deg, #6366f1, #8b5cf6);
             color: white;
@@ -164,7 +164,7 @@ export class NotesSystem {
             transition: transform 0.2s;
           ">💾 Salvar Nota</button>
           
-          <button id="nota-excluir" style="
+              <button id="nota-excluir" style="
             background: #ef4444;
             color: white;
             border: none;
@@ -174,6 +174,31 @@ export class NotesSystem {
             cursor: pointer;
             transition: transform 0.2s;
           ">🗑️</button>
+          
+              <button id="nota-export" style="
+                background: #10b981;
+                color: white;
+                border: none;
+                padding: 12px 14px;
+                border-radius: 8px;
+                font-weight: 600;
+                cursor: pointer;
+                transition: transform 0.2s;
+              ">⬇️ Exportar</button>
+
+              <label style="display:inline-block; margin:0;">
+                <input id="nota-import-input" type="file" accept="application/json" style="display:none" />
+                <button id="nota-import" style="
+                  background: #f59e0b;
+                  color: white;
+                  border: none;
+                  padding: 12px 14px;
+                  border-radius: 8px;
+                  font-weight: 600;
+                  cursor: pointer;
+                  transition: transform 0.2s;
+                ">⬆️ Importar</button>
+              </label>
         </div>
       </div>
     `;
@@ -184,6 +209,9 @@ export class NotesSystem {
     modal.querySelector('#modal-fechar').addEventListener('click', () => this.fecharModal());
     modal.querySelector('#nota-salvar').addEventListener('click', () => this.salvarNota());
     modal.querySelector('#nota-excluir').addEventListener('click', () => this.excluirNota());
+    modal.querySelector('#nota-export').addEventListener('click', () => this.exportarNotas());
+    modal.querySelector('#nota-import').addEventListener('click', () => modal.querySelector('#nota-import-input').click());
+    modal.querySelector('#nota-import-input').addEventListener('change', (e) => this.importarNotasFile(e));
     
     const textarea = modal.querySelector('#nota-texto');
     textarea.addEventListener('input', () => {
@@ -323,6 +351,40 @@ export class NotesSystem {
 
     document.body.appendChild(toast);
     setTimeout(() => toast.remove(), 3000);
+  }
+
+  // Export notes as JSON file
+  exportarNotas() {
+    const dataStr = JSON.stringify(this.notas, null, 2);
+    const blob = new Blob([dataStr], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'apostila-notas.json';
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+    this.mostrarToast('✓ Notas exportadas', 'success');
+  }
+
+  // Import notes from selected file input event
+  async importarNotasFile(event) {
+    const file = event.target.files && event.target.files[0];
+    if (!file) return;
+    try {
+      const text = await file.text();
+      const obj = JSON.parse(text);
+      if (typeof obj !== 'object') throw new Error('Formato inválido');
+      // Merge imported notes with existing (import wins)
+      this.notas = Object.assign({}, this.notas, obj);
+      localStorage.setItem(this.storageKey, JSON.stringify(this.notas));
+      this.mostrarToast('✓ Notas importadas', 'success');
+      setTimeout(() => window.location.reload(), 600);
+    } catch (err) {
+      console.error(err);
+      alert('Erro ao importar notas: arquivo inválido');
+    }
   }
 }
 

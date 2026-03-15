@@ -45,6 +45,11 @@
         transition: background 0.3s;
       }
 
+      :focus-visible {
+        outline: 3px solid rgba(245, 158, 11, 0.9);
+        outline-offset: 3px;
+      }
+
       @keyframes fadeUp {
         from {
           opacity: 0;
@@ -692,6 +697,7 @@
   </head>
 
   <body class="bg-zinc-950 text-zinc-100 font-sans">
+    <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:bg-zinc-900 focus:text-white focus:px-3 focus:py-2 focus:rounded-md">Saltar para conteúdo</a>
     <!-- PROGRESS BAR -->
     <div id="progress-bar" style="width: 0%"></div>
 
@@ -700,6 +706,8 @@
       id="mobile-menu-btn"
       class="fixed top-4 left-4 z-50 bg-amber-500 text-black p-2 rounded-lg shadow-lg no-print transition-all hover:scale-105"
       aria-label="Abrir menu"
+      aria-controls="sidebar"
+      aria-expanded="false"
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -804,6 +812,7 @@
             id="search-input"
             type="text"
             placeholder="Buscar capítulo..."
+            aria-label="Buscar capítulo"
             class="w-full bg-zinc-800 text-zinc-200 rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-amber-500 placeholder-zinc-500"
           />
         </div>
@@ -821,7 +830,7 @@
           </div>
         </div>
         <!-- NAV -->
-        <nav id="nav-list" class="flex-1 overflow-y-auto py-2 px-2 text-sm">
+        <nav id="nav-list" class="flex-1 overflow-y-auto py-2 px-2 text-sm" aria-label="Navegação principal">
           <!-- injected by JS -->
         </nav>
         <div id="fav-sidebar">
@@ -6681,7 +6690,7 @@ db.clientes.insertOne({
 
     <!-- CHATBOT WIDGET -->
     <div id="chat-widget" class="no-print">
-      <div id="chat-window">
+      <aside id="chat-window" role="dialog" aria-label="Chat de ajuda">
         <div id="chat-header">
           <div class="flex items-center gap-2">
             <span class="text-2xl">🤖</span>
@@ -6694,15 +6703,15 @@ db.clientes.insertOne({
             </div>
           </div>
           <div class="flex items-center gap-3">
-             <button id="minimize-chat" class="text-zinc-400 hover:text-white transition-colors" title="Minimizar">
+             <button id="minimize-chat" class="text-zinc-400 hover:text-white transition-colors" title="Minimizar" aria-label="Minimizar chat">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4" /></svg>
              </button>
-             <button id="close-chat" class="text-zinc-400 hover:text-red-400 transition-colors">
+             <button id="close-chat" class="text-zinc-400 hover:text-red-400 transition-colors" title="Fechar chat" aria-label="Fechar chat">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>
              </button>
           </div>
         </div>
-        <div id="chat-messages" class="p-4 flex-1 overflow-y-auto flex flex-col gap-3 scrollbar-thin scrollbar-thumb-zinc-700">
+        <div id="chat-messages" class="p-4 flex-1 overflow-y-auto flex flex-col gap-3 scrollbar-thin scrollbar-thumb-zinc-700" role="log" aria-live="polite" aria-atomic="false">
           <div class="msg msg-bot">
             Saudações, Desenvolvedor! ⚡<br><br>
             Fui atualizado para a versão <b>ULTRA</b>. Além de todo o conteúdo da apostila, agora conheço sobre <b>Performance, Segurança, Arquitetura</b> e posso te ajudar a treinar para <b>Entrevistas</b>.<br><br>
@@ -6721,13 +6730,13 @@ db.clientes.insertOne({
         </div>
         <div id="chat-input-area">
           <div class="input-wrapper">
-             <input type="text" id="chat-input" placeholder="Pergunte qualquer coisa sobre a apostila...">
+             <input type="text" id="chat-input" placeholder="Pergunte qualquer coisa sobre a apostila..." aria-label="Mensagem">
              <button id="chat-send">Enviar</button>
           </div>
           <div class="text-[9px] text-zinc-500 text-center">Pressione Enter para enviar • v3.0 ULTRA Engine</div>
         </div>
       </div>
-      <div id="chat-bubble">🤖</div>
+      <button id="chat-bubble" type="button" aria-label="Abrir chat" class="bg-transparent border-none cursor-pointer">🤖</button>
     </div>
 
     <!-- ===== JAVASCRIPT INTERATIVO ===== -->
@@ -6903,6 +6912,7 @@ db.clientes.insertOne({
           sidebar.style.transform = "translateX(0)";
           overlay.classList.remove("hidden");
           document.body.style.overflow = "hidden";
+          if (mobileBtn) mobileBtn.setAttribute("aria-expanded", "true");
         }
       }
       function closeSidebar() {
@@ -6910,6 +6920,7 @@ db.clientes.insertOne({
           sidebar.style.transform = "";
           overlay.classList.add("hidden");
           document.body.style.overflow = "";
+          if (mobileBtn) mobileBtn.setAttribute("aria-expanded", "false");
         }
       }
       if (mobileBtn) {
@@ -6935,7 +6946,9 @@ db.clientes.insertOne({
         btn.textContent = collapsed ? "▸ Expandir" : "▾ Recolher";
       }
       document.querySelectorAll(".toggle-btn").forEach((btn) => {
-        const content = document.getElementById(btn.dataset.target);
+        const target = btn.dataset.target;
+        if (target) btn.setAttribute("aria-controls", target);
+        const content = document.getElementById(target);
         if (content) content.style.maxHeight = "none";
         btn.addEventListener("click", () => setSection(btn, btn.getAttribute("aria-expanded") === "true"));
       });
@@ -8195,6 +8208,23 @@ db.clientes.insertOne({
               addMsg(chip.innerText, "user");
               handleSend(term);
             };
+          });
+
+          // ── 10. ACCESSIBILITY: keyboard-friendly navigation links
+          document.querySelectorAll("#sec-ementa span.cursor-pointer[onclick]").forEach(function (span) {
+            const onclick = span.getAttribute("onclick") || "";
+            const match = onclick.match(/getElementById\('([^']+)'\)/);
+            if (!match) return;
+            const target = match[1];
+            const a = document.createElement("a");
+            a.href = "#" + target;
+            a.className = span.className + " focus:outline-2 focus:outline-amber-500 focus:outline-offset-2";
+            a.innerHTML = span.innerHTML;
+            a.addEventListener("click", function (e) {
+              e.preventDefault();
+              document.getElementById(target)?.scrollIntoView({ behavior: "smooth" });
+            });
+            span.replaceWith(a);
           });
         }
       }); // end DOMContentLoaded
