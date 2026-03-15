@@ -5,6 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Apostila JavaScript Premium – William Mesquita</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="./js/srs.js"></script>
+    <script src="./js/srs-ui.js"></script>
+    <script src="./js/playground-ui.js"></script>
+    <script src="./js/exercises.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link
       href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Inter:wght@400;500;600;700;900&display=swap"
@@ -7875,11 +7879,13 @@ db.clientes.insertOne({
                 if (oi === q.a) {
                   score++;
                   btn.classList.add("correct");
+                  try { window.SRS && window.SRS.record(capId + '-' + qi, 5); } catch(e) {}
                 } else {
                   btn.classList.add("wrong");
                   qd.querySelectorAll(".quiz-opt")[q.a].classList.add(
                     "correct",
                   );
+                  try { window.SRS && window.SRS.record(capId + '-' + qi, 2); } catch(e) {}
                 }
                 qd.querySelectorAll(".quiz-opt").forEach(function (b) {
                   b.style.cursor = "default";
@@ -7916,7 +7922,7 @@ db.clientes.insertOne({
         }
         Object.keys(QUIZ).forEach(renderQuiz);
 
-        // ── 11. PLAYGROUND ────────────────────────────────�        // ── CHATBOT LOGIC 3.0 (ULTRA ENGINE) ──────────
+        // ── 11. PLAYGROUND ────────────────────────────────�        // ── CHATBOT LOGIC 3.0 (ULTRA ENGINE) ──────────
         const cbub = document.getElementById("chat-bubble");
         const cwin = document.getElementById("chat-window");
         const cinp = document.getElementById("chat-input");
@@ -8193,5 +8199,10 @@ db.clientes.insertOne({
         }
       }); // end DOMContentLoaded
     </script>
+
+    <!-- Load config first so it can set `window.APP_CONFIG` and register SW on GH Pages -->
+    <script src="./js/sync.js"></script>
+    <script src="./js/config.js"></script>
+    <script type="module" src="./js/app.js"></script>
   </body>
 </html>
