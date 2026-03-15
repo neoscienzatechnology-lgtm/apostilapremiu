@@ -602,6 +602,17 @@ function initApp() {
     window.apostilaApp = new ApostilaApp();
   } catch (err) {
     console.error('Falha ao iniciar a Apostila:', err);
+    // Mostrar erro visível para que seja fácil relatar
+    const overlay = document.createElement('div');
+    overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.85);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:15000;padding:24px;text-align:center;font-family:sans-serif;';
+    overlay.innerHTML = `
+      <div style="max-width:680px;">
+        <h1 style="font-size:1.8rem;margin-bottom:16px;">Erro ao iniciar a aplicação</h1>
+        <pre style="white-space:pre-wrap;word-break:break-word;background:rgba(255,255,255,0.08);padding:16px;border-radius:12px;max-height:320px;overflow:auto;">${String(err)}</pre>
+        <p style="margin-top:16px;color:rgba(255,255,255,0.7)">Abra o console para ver detalhes adicionais.</p>
+      </div>
+    `;
+    document.body.appendChild(overlay);
   }
 }
 
