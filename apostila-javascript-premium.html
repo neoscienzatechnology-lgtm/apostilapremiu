@@ -813,6 +813,7 @@
             type="text"
             placeholder="Buscar capítulo..."
             aria-label="Buscar capítulo"
+            data-i18n-placeholder="searchPlaceholder"
             class="w-full bg-zinc-800 text-zinc-200 rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-amber-500 placeholder-zinc-500"
           />
         </div>
@@ -846,6 +847,7 @@
           <button
             onclick="window.print()"
             class="bg-zinc-700 hover:bg-zinc-600 text-white px-4 py-2 rounded-lg text-sm flex items-center gap-2"
+            data-i18n="print"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -866,15 +868,25 @@
           <button
             id="expand-all"
             class="bg-amber-500 hover:bg-amber-400 text-black px-4 py-2 rounded-lg text-sm font-semibold"
+            data-i18n="expandAll"
           >
             Expandir tudo
           </button>
           <button
             id="collapse-all"
             class="bg-zinc-700 hover:bg-zinc-600 text-white px-4 py-2 rounded-lg text-sm"
+            data-i18n="collapseAll"
           >
             Recolher tudo
           </button>
+          <select
+            id="lang-select"
+            class="bg-zinc-700 hover:bg-zinc-600 text-white px-3 py-2 rounded-lg text-sm"
+            data-i18n-aria="langSelectAria"
+          >
+            <option value="pt-BR">PT-BR</option>
+            <option value="en">EN</option>
+          </select>
         </div>
         <!-- ===== CAPA ===== -->
         <section

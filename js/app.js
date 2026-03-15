@@ -67,6 +67,9 @@ class ApostilaApp {
     this.analytics = new LocalAnalytics();
     this.accessibility = new AccessibilityManager();
 
+    // Internacionalização (i18n)
+    this.setupI18n();
+
     // Configurar UI
     this.setupUI();
     this.setupTheme();
@@ -82,6 +85,96 @@ class ApostilaApp {
     this.setupOfflineDetection();
 
     console.log('✓ Apostila carregada com sucesso!');
+  }
+
+  // Internacionalização (i18n)
+  setupI18n() {
+    this.langKey = 'apostila_lang';
+    this.defaultLang = 'pt-BR';
+    this.lang = localStorage.getItem(this.langKey) || this.defaultLang;
+
+    this.translations = {
+      'pt-BR': {
+        print: 'Imprimir/PDF',
+        expandAll: 'Expandir tudo',
+        collapseAll: 'Recolher tudo',
+        searchPlaceholder: 'Buscar capítulo...',
+        skipContent: 'Saltar para conteúdo',
+        langSelectAria: 'Selecionar idioma',
+        help: 'Ajuda',
+        connected: 'Online',
+        disconnected: 'Offline',
+      },
+      en: {
+        print: 'Print/PDF',
+        expandAll: 'Expand all',
+        collapseAll: 'Collapse all',
+        searchPlaceholder: 'Search chapter...',
+        skipContent: 'Skip to content',
+        langSelectAria: 'Select language',
+        help: 'Help',
+        connected: 'Online',
+        disconnected: 'Offline',
+      },
+    };
+
+    const select = document.getElementById('lang-select');
+    if (select) {
+      select.value = this.lang;
+      select.addEventListener('change', (evt) => {
+        const value = evt.target.value;
+        this.setLang(value);
+      });
+    }
+
+    this.applyTranslations();
+  }
+
+  t(key) {
+    return this.translations[this.lang]?.[key] || this.translations[this.defaultLang]?.[key] || key;
+  }
+
+  setLang(lang) {
+    if (!this.translations[lang]) return;
+    this.lang = lang;
+    localStorage.setItem(this.langKey, lang);
+    this.applyTranslations();
+  }
+
+  applyTranslations() {
+    document.querySelectorAll('[data-i18n]').forEach((el) => {
+      const key = el.dataset.i18n;
+      if (!key) return;
+      el.textContent = this.t(key);
+    });
+
+    document.querySelectorAll('[data-i18n-placeholder]').forEach((el) => {
+      const key = el.dataset.i18nPlaceholder;
+      if (!key) return;
+      el.placeholder = this.t(key);
+    });
+
+    document.querySelectorAll('[data-i18n-title]').forEach((el) => {
+      const key = el.dataset.i18nTitle;
+      if (!key) return;
+      el.title = this.t(key);
+    });
+
+    document.querySelectorAll('[data-i18n-aria]').forEach((el) => {
+      const key = el.dataset.i18nAria;
+      if (!key) return;
+      el.setAttribute('aria-label', this.t(key));
+    });
+
+    // Skip-link text
+    const skipLink = document.querySelector('a[href="#main-content"]');
+    if (skipLink) skipLink.textContent = this.t('skipContent');
+
+    // Update toggle buttons (expand/collapse) text values
+    document.querySelectorAll('.toggle-btn').forEach(btn => {
+      const expanded = btn.getAttribute('aria-expanded') === 'true';
+      btn.textContent = expanded ? `▾ ${this.t('collapseAll')}` : `▸ ${this.t('expandAll')}`;
+    });
   }
 
   // Configurar interface
@@ -103,7 +196,7 @@ class ApostilaApp {
         sec.classList.remove('collapsed');
       });
       document.querySelectorAll('.toggle-btn').forEach(btn => {
-        btn.textContent = '▾ Recolher';
+        btn.textContent = `▾ ${this.t('collapseAll')}`;
         btn.setAttribute('aria-expanded', 'true');
       });
     });
@@ -114,7 +207,7 @@ class ApostilaApp {
         sec.classList.add('collapsed');
       });
       document.querySelectorAll('.toggle-btn').forEach(btn => {
-        btn.textContent = '▸ Expandir';
+        btn.textContent = `▸ ${this.t('expandAll')}`;
         btn.setAttribute('aria-expanded', 'false');
       });
     });
@@ -131,12 +224,12 @@ class ApostilaApp {
         if (isCollapsed) {
           target.style.maxHeight = 'none';
           target.classList.remove('collapsed');
-          btn.textContent = '▾ Recolher';
+          btn.textContent = `▾ ${this.t('collapseAll')}`;
           btn.setAttribute('aria-expanded', 'true');
         } else {
           target.style.maxHeight = '0';
           target.classList.add('collapsed');
-          btn.textContent = '▸ Expandir';
+          btn.textContent = `▸ ${this.t('expandAll')}`;
           btn.setAttribute('aria-expanded', 'false');
         }
       });
